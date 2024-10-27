@@ -24,13 +24,13 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt  # Install dependencies globally
+          pip install -r requirements.txt
 
       - name: Run unit tests
         run: |
           pip install pytest 
           pip show pytest  # Check if pytest is installed
-          pytest tests/    # Run unit tests
+          pytest tests/
 
   build_docker:
     runs-on: ubuntu-latest
@@ -58,12 +58,19 @@ jobs:
         with:
           version: 'latest'
 
-      - name: Deploy to Kubernetes
+      - name: Decode and Set Kubeconfig
         env:
-          KUBECONFIG_B64: ${{ secrets.KUBECONFIG_B64 }}
+          KUBECONFIG_B64: ${{ secrets.KUBECONFIG }}
         run: |
-          echo "$KUBECONFIG_B64" | base64 --decode > /tmp/kubeconfig
-          export KUBECONFIG=/tmp/kubeconfig
+          echo "$KUBECONFIG_B64" | base64 --decode > $HOME/.kube/config
+          export KUBECONFIG=$HOME/.kube/config
+          cat $HOME/.kube/config  # Optional: Validate kubeconfig is properly set
+
+      - name: Check Kubectl Context
+        run: |
+          kubectl config get-contexts  # Check available contexts
+          kubectl config use-context minikube  # Set the desired context
+
+      - name: Deploy to Kubernetes
+        run: |
           kubectl set image deployment/rf-inference rf-inference-container=house-price-model:$GITHUB_SHA
-        
-        
