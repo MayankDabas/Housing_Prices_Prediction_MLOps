@@ -79,3 +79,10 @@ jobs:
             --platform managed \
             --region us-central1 \
             --allow-unauthenticated
+
+      - name: Test Deployed Model
+        run: |
+          curl -X POST \
+            -H "Content-Type: application/json" \
+            -d '{"features": [3.87, 19.0, 6.5, 1.01, 880, 3.3, 34.26, -118.41]}' \
+            https://house-price-api-11295200031.us-central1.run.app/predict
