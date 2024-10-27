@@ -62,6 +62,7 @@ jobs:
         env:
           KUBECONFIG: ${{ secrets.KUBECONFIG }}
         run: |
-          echo "${KUBECONFIG}" > /tmp/kubeconfig
+          echo "$KUBECONFIG" > /tmp/kubeconfig
           export KUBECONFIG=/tmp/kubeconfig
           kubectl set image deployment/rf-inference rf-inference-container=house-price-model:$GITHUB_SHA
+        
