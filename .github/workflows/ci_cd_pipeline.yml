@@ -60,7 +60,7 @@ jobs:
 
       - name: Set Kubeconfig from Secret
         env:
-          KUBECONFIG_B64: ${{ secrets.KUBECONFIG_B64 }}
+          KUBECONFIG_B64: ${{ secrets.KUBECONFIG }}
         run: |
           mkdir -p $HOME/.kube  # Create the .kube directory
           echo "$KUBECONFIG_B64" | base64 --decode > $HOME/.kube/config
