@@ -62,14 +62,14 @@ jobs:
         env:
           KUBECONFIG_B64: ${{ secrets.KUBECONFIG_B64 }}
         run: |
-          mkdir -p $HOME/.kube  # Create the .kube directory
+          mkdir -p $HOME/.kube
           echo "$KUBECONFIG_B64" | base64 --decode > $HOME/.kube/config
           export KUBECONFIG=$HOME/.kube/config
-          kubectl config get-contexts  # Check available contexts
+          kubectl config get-contexts  # Optional: Validate that the kubeconfig is set
 
       - name: Set Kubectl Context
         run: |
-          kubectl config use-context minikube  # Set to 'minikube' context
+          kubectl config use-context minikube
 
       - name: Deploy to Kubernetes
         run: |
