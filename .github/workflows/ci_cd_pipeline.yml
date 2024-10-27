@@ -100,3 +100,11 @@ jobs:
         run: |
           kubectl set image deployment/rf-inference rf-inference-container=house-price-model:$GITHUB_SHA
 
+  deploy_self_hosted:
+    runs-on: self-hosted
+    needs: build_docker
+
+    steps:
+      - name: Deploy to Kubernetes
+        run: |
+          kubectl set image deployment/rf-inference rf-inference-container=house-price-model:$GITHUB_SHA
