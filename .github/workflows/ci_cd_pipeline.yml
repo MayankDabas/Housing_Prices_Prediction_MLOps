@@ -60,19 +60,17 @@ jobs:
 
       - name: Set Kubeconfig from Secret
         env:
-          KUBECONFIG_B64: ${{ secrets.KUBECONFIG }}
+          KUBECONFIG_B64: ${{ secrets.KUBECONFIG_B64 }}
         run: |
           mkdir -p $HOME/.kube  # Create the .kube directory
           echo "$KUBECONFIG_B64" | base64 --decode > $HOME/.kube/config
           export KUBECONFIG=$HOME/.kube/config
-          kubectl config get-contexts  # Optional: Validate that the kubeconfig is set
+          kubectl config get-contexts  # Check available contexts
 
-      - name: Check Kubectl Context
+      - name: Set Kubectl Context
         run: |
-          kubectl config use-context minikube  # Set the desired context
+          kubectl config use-context minikube  # Set to 'minikube' context
 
       - name: Deploy to Kubernetes
         run: |
           kubectl set image deployment/rf-inference rf-inference-container=house-price-model:$GITHUB_SHA
-
-
