@@ -60,9 +60,10 @@ jobs:
 
       - name: Deploy to Kubernetes
         env:
-          KUBECONFIG: ${{ secrets.KUBECONFIG }}
+          KUBECONFIG_B64: ${{ secrets.KUBECONFIG_B64 }}
         run: |
-          echo "$KUBECONFIG" > /tmp/kubeconfig
+          echo "$KUBECONFIG_B64" | base64 --decode > /tmp/kubeconfig
           export KUBECONFIG=/tmp/kubeconfig
           kubectl set image deployment/rf-inference rf-inference-container=house-price-model:$GITHUB_SHA
+        
         
