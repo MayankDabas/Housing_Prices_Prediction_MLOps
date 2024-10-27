@@ -28,6 +28,7 @@ jobs:
 
       - name: Run unit tests
         run: |
+          pip install pytest 
           pip show pytest  # Check if pytest is installed
           pytest tests/    # Run unit tests
 
