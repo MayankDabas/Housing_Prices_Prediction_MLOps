@@ -1,0 +1,2 @@
+Hyperparameters: {"n_estimators": 50, "max_depth": 10, "min_samples_split": 2, "min_samples_leaf": 1}
+R² score on Validation Set: 0.7877219919473694

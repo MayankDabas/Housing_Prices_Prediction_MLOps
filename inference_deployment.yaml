@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rf-inference
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rf-inference
+  template:
+    metadata:
+      labels:
+        app: rf-inference
+    spec:
+      containers:
+      - name: rf-inference-container
+        image: house-price-model:v5
+        ports:
+        - containerPort: 8080

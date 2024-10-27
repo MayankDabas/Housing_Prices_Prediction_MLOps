@@ -1,0 +1,4 @@
+curl -X POST http://192.168.49.2:30525/predict \
+-H "Content-Type: application/json" \
+-d '{"features": [2.5, 30.0, 6.0, 1.0, 800.0, 3.0, 37.5, -122.0]}'
+{"prediction":3.797742234585292}

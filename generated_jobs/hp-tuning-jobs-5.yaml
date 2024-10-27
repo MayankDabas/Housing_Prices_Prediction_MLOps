@@ -1,0 +1,20 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: hp-tuning-jobs-5
+spec:
+  backoffLimit: 4
+  template:
+    spec:
+      containers:
+      - args:
+        - --n_estimators=50
+        - --max_depth=10
+        - --min_samples_split=2
+        - --min_samples_leaf=2
+        command:
+        - python
+        - house_price_prediction.py
+        image: house-price-model:v1
+        name: house-price-container
+      restartPolicy: Never
