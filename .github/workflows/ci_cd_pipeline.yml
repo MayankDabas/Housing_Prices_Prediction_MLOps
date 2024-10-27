@@ -58,19 +58,45 @@ jobs:
         with:
           version: 'latest'
 
-      - name: Set Kubeconfig from Secret
-        env:
-          KUBECONFIG_B64: ${{ secrets.KUBECONFIG_B64 }}
+      - name: Create Kubeconfig Directory
+        run: mkdir -p $HOME/.kube
+
+      - name: Write Certificates from Secrets
         run: |
-          mkdir -p $HOME/.kube
-          echo "$KUBECONFIG_B64" | base64 --decode > $HOME/.kube/config
-          export KUBECONFIG=$HOME/.kube/config
-          kubectl config get-contexts  # Optional: Validate that the kubeconfig is set
+          echo "${{ secrets.MINIKUBE_CA_CRT }}" > $HOME/.kube/ca.crt
+          echo "${{ secrets.MINIKUBE_CLIENT_CRT }}" > $HOME/.kube/client.crt
+          echo "${{ secrets.MINIKUBE_CLIENT_KEY }}" > $HOME/.kube/client.key
+
+      - name: Create Kubeconfig
+        run: |
+          cat <<EOF > $HOME/.kube/config
+          apiVersion: v1
+          clusters:
+          - cluster:
+              certificate-authority: $HOME/.kube/ca.crt
+              server: https://192.168.49.2:8443
+            name: minikube
+          contexts:
+          - context:
+              cluster: minikube
+              namespace: default
+              user: minikube
+            name: minikube
+          current-context: minikube
+          kind: Config
+          users:
+          - name: minikube
+            user:
+              client-certificate: $HOME/.kube/client.crt
+              client-key: $HOME/.kube/client.key
+          EOF
+        env:
+          KUBECONFIG: $HOME/.kube/config
 
       - name: Set Kubectl Context
-        run: |
-          kubectl config use-context minikube
+        run: kubectl config use-context minikube
 
       - name: Deploy to Kubernetes
         run: |
           kubectl set image deployment/rf-inference rf-inference-container=house-price-model:$GITHUB_SHA
+
