@@ -1,3 +1,26 @@
+# deployment.yaml
+
+# ==============================================================================
+# Kubernetes Deployment for RandomForest Inference API
+# ------------------------------------------------------------------------------
+# This deployment file is designed to manage the deployment of a Flask-based API
+# serving predictions from a trained RandomForest model on a Kubernetes cluster.
+# 
+# Key Details:
+# - Deploys a single replica of the RandomForest inference container.
+# - Uses the Docker image `house-price-model:v6` to serve the model.
+# - Exposes port 8080, which is the port used by the Flask API inside the container.
+#
+# To apply this deployment:
+# $ kubectl apply -f deployment.yaml
+#
+# To verify the deployment:
+# $ kubectl get pods
+#
+# To expose the service (if not yet configured):
+# $ kubectl expose deployment rf-inference --type=LoadBalancer --port=8080
+# ==============================================================================
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:

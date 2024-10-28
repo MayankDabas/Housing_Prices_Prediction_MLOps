@@ -1,7 +1,14 @@
-###################################################################################################
-#                                        Import Statements                                       #
-###################################################################################################
+"""
+This script performs the following tasks:
+1. Loads and preprocesses the California Housing dataset.
+2. Supports hyperparameter tuning for a RandomForestRegressor using command-line arguments.
+3. Evaluates the model's performance on a validation set.
+4. Loads the best hyperparameters from a file and trains the final model.
+5. Saves the final model to a file for future use.
 
+The script allows for both hyperparameter tuning and final model training, making it 
+flexible for different stages of model development.
+"""
 import argparse
 import itertools
 import joblib
@@ -19,24 +26,16 @@ from sklearn.metrics import r2_score
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 
-###################################################################################################
-#                                        Data Loading and Preprocessing                           #
-###################################################################################################
 
-# Load the California Housing dataset
 housing_dataset = fetch_california_housing(as_frame=True)
 
 features = housing_dataset.data
 target_value = housing_dataset.target
 
-# Standardize the features
 scaler = StandardScaler()
 features_scaled = scaler.fit_transform(features)
 features_scaled = pd.DataFrame(features_scaled, columns=features.columns)
 
-###################################################################################################
-#                                        Methods                                                  #
-###################################################################################################
 
 def parse_arguments():
     """
@@ -132,9 +131,6 @@ def train_final_model(features, target_value, best_hyperparams):
 
     return model
 
-###################################################################################################
-#                                        Main Script                                              #
-###################################################################################################
 
 X_train, X_test, y_train, y_test = split_dataset(features_scaled, target_value, 0.2, 42)
 X_train, X_val, y_train, y_val = split_dataset(X_train, y_train, 0.125, 42)
@@ -142,11 +138,9 @@ X_train, X_val, y_train, y_val = split_dataset(X_train, y_train, 0.125, 42)
 if __name__ == "__main__":
     args = parse_arguments()
 
-    # Train and evaluate the model with provided arguments
     # Uncomment the following line if you want to run the hyperparameter tuning
     # train_and_evaluate_model(X_train, y_train, X_val, y_val, args)
 
-    # Load best hyperparameters and train the final model
     try:
         best_hyperparams = load_best_hyperparameters('best_hyperparams.json')
     except FileNotFoundError as e:

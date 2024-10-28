@@ -1,3 +1,31 @@
+# .github/workflows/ci_cd_pipeline.yml
+
+# ==============================================================================
+# CI/CD Pipeline for House Price Prediction Model
+# ------------------------------------------------------------------------------
+# This GitHub Actions workflow automates the CI/CD process for a machine learning
+# model that predicts house prices. The pipeline comprises the following stages:
+#
+# 1. **Build and Test**: 
+#    - Sets up a Python environment and installs dependencies.
+#    - Runs unit tests to validate the model and its components.
+#
+# 2. **Docker Build and Push**:
+#    - Builds a Docker image of the model and pushes it to Google Container Registry (GCR).
+#    - Ensures the image is tagged both with the current Git commit SHA and 'latest'.
+#
+# 3. **Deploy to Google Cloud Run**:
+#    - Deploys the Docker image to Google Cloud Run as a managed service.
+#    - Allows public access and tests the deployed model by sending a sample request.
+#
+# Environment Variables:
+# - `GCP_PROJECT_ID`: GCP Project ID where the resources are deployed.
+# - `GCP_SERVICE_ACCOUNT_KEY`: Base64-encoded service account key for GCP authentication.
+#
+# To use this pipeline, ensure the repository's secrets contain the necessary GCP 
+# credentials and that a 'requirements.txt' file exists to install dependencies.
+# ==============================================================================
+
 name: CI/CD Pipeline for House Price Model
 
 on:
@@ -9,7 +37,6 @@ on:
       - main
 
 jobs:
-  # Step 1: Run Unit Tests
   build_and_test:
     runs-on: ubuntu-latest
 
@@ -32,7 +59,6 @@ jobs:
           pip install pytest
           pytest tests/
 
-  # Step 2: Build and Push Docker Image
   build_docker:
     runs-on: ubuntu-latest
     needs: build_and_test
@@ -60,7 +86,6 @@ jobs:
           gcloud --quiet auth configure-docker
           docker push gcr.io/$GCP_PROJECT_ID/house-price-model:$GITHUB_SHA
 
-  # Step 3: Deploy to Google Cloud Run
   deploy_cloud_run:
     runs-on: ubuntu-latest
     needs: build_docker

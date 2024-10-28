@@ -1,3 +1,22 @@
+"""
+This script sets up a simple Flask-based API for serving predictions from 
+a trained RandomForest model. The model is loaded from a serialized file, 
+and predictions are made based on input features provided via a POST request.
+
+Endpoints:
+1. /predict (POST): Accepts JSON input with feature values and returns the model's prediction.
+
+Expected Input Format:
+{
+    "features": [feature1, feature2, ..., featureN]
+}
+
+Example Output Format:
+{
+    "prediction": predicted_value
+}
+"""
+
 from flask import Flask, request, jsonify
 import joblib
 
